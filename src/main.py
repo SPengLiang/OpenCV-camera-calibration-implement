@@ -50,6 +50,8 @@ if __name__ == "__main__":
         dst = cv.undistort(org, cameraMatrix, distCoeffs, newcameramtx)
 
         undistort_dir = r'..\undistort_pic'
+        if not os.path.exists(undistort_dir):
+            os.mkdir(undistort_dir)
         #矫正图像保存路径
         cv.imwrite(os.path.join(undistort_dir, pic), dst)
 
