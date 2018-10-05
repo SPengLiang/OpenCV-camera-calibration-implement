@@ -34,21 +34,27 @@ if __name__ == "__main__":
     retval, cameraMatrix, distCoeffs, rvecs, tvecs = cv.calibrateCamera(real_points, pic_points, (480, 640), None, None)
 
 
-    #下面为矫正步骤
-    org = cv.imread(r'..\pic\left02.jpg')
-
-    h, w = org.shape[:2]
-    newcameramtx, roi=cv.getOptimalNewCameraMatrix(cameraMatrix,distCoeffs, (w,h), 1,(w,h))
-
     #显示较正前图像
-    cv.imshow('org', org)
-    cv.waitKey(0)
+    #cv.imshow('org', org)
+    #cv.waitKey(0)
+    
+    #下面为矫正步骤
+    for pic in pic_name:
+        pic_path = os.path.join(file_dir, pic)
+        org = cv.imread(pic_path)
+        
+        #选择感兴趣区域
+        h, w = org.shape[:2]
+        newcameramtx, roi=cv.getOptimalNewCameraMatrix(cameraMatrix,distCoeffs, (w,h), 1, (w, h))
+        
+        dst = cv.undistort(org, cameraMatrix, distCoeffs, newcameramtx)
 
-    dst = cv.undistort(org, cameraMatrix, distCoeffs, None)
+        undistort_dir = r'..\undistort_pic'
+        #矫正图像保存路径
+        cv.imwrite(os.path.join(undistort_dir, pic), dst)
 
     #显示较正后图像
-    cv.imshow('undistort', dst)
-    cv.waitKey(0)
+    #cv.imshow('undistort', dst)
+    #cv.waitKey(0)
 
-    #矫正图像保存路径
-    cv.imwrite(r'..\undistort\undistort.jpg', dst)
+    
